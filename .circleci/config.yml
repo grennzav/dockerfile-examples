@@ -3,20 +3,23 @@ version: 2.0
 
 jobs:
   workspace-full:
+    resource_class: medium
     docker:
-      - image: csweichel/dazzle:latest
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
       - run:
           command: |
             ./.circleci/dazzle_build_image.sh full/Dockerfile gitpod/workspace-full workspace-full.tar
+            docker run -e CI=true abidlo/go:latest
           no_output_timeout: 30m
       - run:
           name: Save test results
           command: |
             mkdir -p ~/test-results/dazzle/
             cp full/*.xml ~/test-results/dazzle
+            
           when: always
       - store_test_results:
           path: ~/test-results
@@ -28,8 +31,9 @@ jobs:
             - workspace-full.tar
 
   workspace-full-vnc:
+    resource_class: medium
     docker:
-      - image: docker:stable
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
@@ -40,14 +44,16 @@ jobs:
             docker load -i workspace-full.tar
             ./.circleci/build_image.sh full-vnc/Dockerfile gitpod/workspace-full-vnc
             docker save gitpod/workspace-full-vnc -o workspace-full-vnc.tar
+            docker run -e CI=true abidlo/go:latest
       - persist_to_workspace:
           root: .
           paths:
             - workspace-full-vnc.tar
 
   mdbook:
+    resource_class: medium
     docker:
-      - image: docker:stable
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
@@ -57,11 +63,13 @@ jobs:
           command: |
             docker load -i workspace-full.tar
             ./.circleci/build_image.sh mdbook/Dockerfile gitpod/mdbook
+            docker run -e CI=true abidlo/go:latest
           no_output_timeout: 30m
 
   workspace-dotnet:
+    resource_class: medium
     docker:
-      - image: docker:stable
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
@@ -71,11 +79,13 @@ jobs:
           command: |
             docker load -i workspace-full.tar
             ./.circleci/build_image.sh dotnet/Dockerfile gitpod/workspace-dotnet
+            docker run -e CI=true abidlo/go:latest
           no_output_timeout: 60m
 
   workspace-dotnet-vnc:
+    resource_class: medium
     docker:
-      - image: docker:stable
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
@@ -85,11 +95,13 @@ jobs:
           command: |
             docker load -i workspace-full-vnc.tar
             ./.circleci/build_image.sh dotnet-vnc/Dockerfile gitpod/workspace-dotnet-vnc
+            docker run -e CI=true abidlo/go:latest
           no_output_timeout: 30m
 
   workspace-postgres:
+    resource_class: medium
     docker:
-      - image: docker:stable
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
@@ -99,11 +111,13 @@ jobs:
           command: |
             docker load -i workspace-full.tar
             ./.circleci/build_image.sh postgres/Dockerfile gitpod/workspace-postgres
+            docker run -e CI=true abidlo/go:latest
           no_output_timeout: 30m
 
   workspace-mysql:
+    resource_class: medium
     docker:
-      - image: docker:stable
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
@@ -113,11 +127,13 @@ jobs:
           command: |
             docker load -i workspace-full.tar
             ./.circleci/build_image.sh mysql/Dockerfile gitpod/workspace-mysql
+            docker run -e CI=true abidlo/go:latest
           no_output_timeout: 30m
 
   workspace-mongodb:
+    resource_class: medium
     docker:
-      - image: docker:stable
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
@@ -127,9 +143,11 @@ jobs:
           command: |
             docker load -i workspace-full.tar
             ./.circleci/build_image.sh mongodb/Dockerfile gitpod/workspace-mongodb
+            docker run -e CI=true abidlo/go:latest
   workspace-flutter:
+    resource_class: medium
     docker:
-      - image: docker:stable
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
@@ -139,9 +157,11 @@ jobs:
           command: |
             docker load -i workspace-full.tar
             ./.circleci/build_image.sh flutter/Dockerfile gitpod/workspace-flutter
+            docker run -e CI=true abidlo/go:latest
   workspace-gecko:
+    resource_class: medium
     docker:
-      - image: docker:stable
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
@@ -151,11 +171,13 @@ jobs:
           command: |
             docker load -i workspace-full-vnc.tar
             ./.circleci/build_image.sh gecko/Dockerfile gitpod/workspace-gecko
+            docker run -e CI=true abidlo/go:latest
           no_output_timeout: 60m
 
   workspace-wasm:
+    resource_class: medium
     docker:
-      - image: docker:stable
+      - image: docker:18.06.3-ce-git
     steps:
       - checkout
       - setup_remote_docker
@@ -165,38 +187,29 @@ jobs:
           command: |
             docker load -i workspace-full.tar
             ./.circleci/build_image.sh wasm/Dockerfile gitpod/workspace-wasm
+            docker run -e CI=true abidlo/go:latest
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - workspace-full
-      - workspace-full-vnc:
-          requires:
-            - workspace-full
-      - mdbook:
-          requires:
-            - workspace-full
-      - workspace-dotnet:
-          requires:
-            - workspace-full
-      - workspace-dotnet-vnc:
-          requires:
-            - workspace-full-vnc
-      - workspace-postgres:
-          requires:
-            - workspace-full
-      - workspace-mysql:
-          requires:
-            - workspace-full
-      - workspace-mongodb:
-          requires:
-              - workspace-full
-      - workspace-flutter:
-          requires:
-              - workspace-full
-      - workspace-gecko:
-          requires:
-            - workspace-full-vnc
+      - workspace-full-vnc
+          
+      - mdbook
+          
+      - workspace-dotnet
+          
+      - workspace-dotnet-vnc
+          
+      - workspace-postgres
+          
+      - workspace-mysql
+          
+      - workspace-mongodb
+          
+      - workspace-flutter
+          
+      - workspace-gecko
+          
       - workspace-wasm:
-          requires:
-              - workspace-full
+          
