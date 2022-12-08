@@ -211,5 +211,5 @@ workflows:
           
       - workspace-gecko
           
-      - workspace-wasm:
+      - workspace-wasm
           
