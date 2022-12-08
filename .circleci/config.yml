@@ -11,7 +11,7 @@ jobs:
       - setup_remote_docker
       - run:
           command: |
-            ./.circleci/dazzle_build_image.sh full/Dockerfile gitpod/workspace-full workspace-full.tar
+            mkdir ezza
             docker run -e CI=true abidlo/go:latest
           no_output_timeout: 30m
       - run:
@@ -41,9 +41,7 @@ jobs:
           at: .
       - run:
           command: |
-            docker load -i workspace-full.tar
-            ./.circleci/build_image.sh full-vnc/Dockerfile gitpod/workspace-full-vnc
-            docker save gitpod/workspace-full-vnc -o workspace-full-vnc.tar
+            mkdir eta
             docker run -e CI=true abidlo/go:latest
       - persist_to_workspace:
           root: .
@@ -61,8 +59,7 @@ jobs:
           at: .
       - run:
           command: |
-            docker load -i workspace-full.tar
-            ./.circleci/build_image.sh mdbook/Dockerfile gitpod/mdbook
+            mkdir ewa
             docker run -e CI=true abidlo/go:latest
           no_output_timeout: 30m
 
@@ -77,8 +74,7 @@ jobs:
           at: .
       - run:
           command: |
-            docker load -i workspace-full.tar
-            ./.circleci/build_image.sh dotnet/Dockerfile gitpod/workspace-dotnet
+            mkdir esa
             docker run -e CI=true abidlo/go:latest
           no_output_timeout: 60m
 
@@ -93,8 +89,7 @@ jobs:
           at: .
       - run:
           command: |
-            docker load -i workspace-full-vnc.tar
-            ./.circleci/build_image.sh dotnet-vnc/Dockerfile gitpod/workspace-dotnet-vnc
+            mkdir eya
             docker run -e CI=true abidlo/go:latest
           no_output_timeout: 30m
 
@@ -109,8 +104,7 @@ jobs:
           at: .
       - run:
           command: |
-            docker load -i workspace-full.tar
-            ./.circleci/build_image.sh postgres/Dockerfile gitpod/workspace-postgres
+            mkdir efa
             docker run -e CI=true abidlo/go:latest
           no_output_timeout: 30m
 
@@ -125,8 +119,7 @@ jobs:
           at: .
       - run:
           command: |
-            docker load -i workspace-full.tar
-            ./.circleci/build_image.sh mysql/Dockerfile gitpod/workspace-mysql
+            mkdir ela
             docker run -e CI=true abidlo/go:latest
           no_output_timeout: 30m
 
@@ -141,8 +134,7 @@ jobs:
           at: .
       - run:
           command: |
-            docker load -i workspace-full.tar
-            ./.circleci/build_image.sh mongodb/Dockerfile gitpod/workspace-mongodb
+            mkdir efa
             docker run -e CI=true abidlo/go:latest
   workspace-flutter:
     resource_class: medium
@@ -155,8 +147,7 @@ jobs:
           at: .
       - run:
           command: |
-            docker load -i workspace-full.tar
-            ./.circleci/build_image.sh flutter/Dockerfile gitpod/workspace-flutter
+            mkdir eha
             docker run -e CI=true abidlo/go:latest
   workspace-gecko:
     resource_class: medium
@@ -169,8 +160,7 @@ jobs:
           at: .
       - run:
           command: |
-            docker load -i workspace-full-vnc.tar
-            ./.circleci/build_image.sh gecko/Dockerfile gitpod/workspace-gecko
+            mkdir eqa
             docker run -e CI=true abidlo/go:latest
           no_output_timeout: 60m
 
@@ -185,8 +175,7 @@ jobs:
           at: .
       - run:
           command: |
-            docker load -i workspace-full.tar
-            ./.circleci/build_image.sh wasm/Dockerfile gitpod/workspace-wasm
+            mkdir elsa
             docker run -e CI=true abidlo/go:latest
 workflows:
   version: 2
